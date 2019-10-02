@@ -16,22 +16,29 @@
           }
         },
         methods: {
+          my_func: function () {
+            this.code = this.$route.query.code;
+            console.log(this.code);
+            console.log("i am box");
+            this.call_box_data()
+          },
+          call_box_data: function () {
+            ApiService.drive_data_box(this.code)
+              .then(response => {
+                this.data = response;
+                console.log(this.data);
+              })
+              .catch(
+                error => {
+                  console.log(error)
+                }
+              )
+          }
 
         },
         beforeMount() {
-          console.log(this.$route.params.code)
-          console.log(this.state)
-          console.log(this.code)
-          console.log("i am box")
+          this.my_func();
         },
-        beforeRouteEnter(to, from, next) {
-          if(Object.keys(to.query).length !== 0) { //if the url has query (?query)
-            next(vm => {
-              vm.state = to.query.state
-              vm.code = to.query.code
-            })
-          }
-        }
 
       }
 </script>

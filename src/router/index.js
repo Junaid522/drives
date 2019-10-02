@@ -7,10 +7,12 @@ import GoogleDrive from "../views/GoogleDrive";
 import OneDrive from "../views/OneDrive";
 import Dropbox from "../views/Dropbox";
 import Box from "../views/Box";
+import HelloWorld from "../components/HelloWorld";
 Vue.use(Router);
 
 export const router = new Router(
   {
+    mode: 'history',
     routes: [
       {
         path: '/login',
@@ -43,9 +45,14 @@ export const router = new Router(
         component: Dropbox
       },
       {
-        path: '/box',
+        path: '/box/',
         name: 'box',
         component: Box
+      },
+      {
+        path: '/hello_world',
+        name: 'hello_world',
+        component: HelloWorld
       },
       {
         path: '*', redirect: '/'

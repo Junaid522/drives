@@ -37,6 +37,12 @@ export default {
         return response.data
       })
   },
+  save_token_onedrive(params){
+    return http.get('/save_token/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
   connect_dropbox(){
     return http.get('/dropbox_home/')
       .then(response => {
@@ -49,8 +55,14 @@ export default {
       return response.data
     })
   },
-  drive_data_box(){
-    return http.get('/box_return_url/')
+  drive_data_box(params){
+    return http.get('/box_return_url/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
+  drive_data_dropbox(params){
+    return http.get('/update_drpbox_credentials/'+params)
       .then(response => {
         return response.data
       })

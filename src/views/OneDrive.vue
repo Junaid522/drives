@@ -11,11 +11,17 @@
         data(){
           return{
             data: null,
+            params: null,
           }
         },
         methods:{
           onedrive_data: function () {
-            ApiService.connect_onedrive()
+            this.params = this.$route.query.access_token;
+            this.params = '?access_token=' + this.params;
+            this.onedrive_token();
+          },
+          onedrive_token: function () {
+            ApiService.save_token_onedrive(this.params)
               .then(response => {
                 this.data = response;
                 console.log(this.data);
@@ -25,7 +31,7 @@
                   console.log(error)
                 }
               )
-          }
+          },
         },
         beforeMount() {
           this.onedrive_data();
