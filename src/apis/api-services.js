@@ -25,8 +25,26 @@ export default {
         return response.data
       })
   },
+  logged_in_user(){
+  return http.get('/logged_in_user/')
+    .then(response => {
+      return response.data
+    })
+  },
+  get_google_drive_status(params){
+    return http.get('/googledrive/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
+  drive_data(params){
+    return http.get('/drive_data/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
   connect_google_drive(){
-    return http.get('/googledrive/')
+    return http.get('/connect_google_drive/')
       .then(response => {
         return response.data
       })
@@ -57,6 +75,18 @@ export default {
   },
   drive_data_box(params){
     return http.get('/box_return_url/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
+  save_dropbox_data(){
+    return http.get('/save_dropbox_data/')
+      .then(response => {
+        return response.data
+      })
+  },
+  save_box_data(){
+    return http.get('/save_box_data/')
       .then(response => {
         return response.data
       })

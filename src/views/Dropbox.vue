@@ -1,28 +1,39 @@
 <template>
-    <p>Dropbox</p>
+  <div>
+    <Header></Header>
+    <h3>Dropbox</h3>
+    <p>get respective user dropbox data.</p>
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>ID</th>
+        <th>File</th>
+        <th>Type</th>
+      </tr>
+      <tr v-for="(d, index) in data">
+        <td>{{ index }}</td>
+        <td>{{ d.file_id }}</td>
+        <td>{{ d.file_name }}</td>
+        <td>{{ d.file_type }}</td>
+      </tr>
+    </table>
+  </div>
 </template>
 
 <script>
   import ApiService from '../apis/api-services'
+  import Header from "../components/Header";
     export default {
         name: "Dropbox",
+      components: {Header},
       data(){
         return{
           data: null,
-          state: null,
-          params: null,
         }
       },
       methods: {
-        my_func: function () {
-          this.params = this.$route.hash;
-          this.params = this.params.replace('#', '?');
-          console.log(this.params);
-          console.log("i am dropbox");
-          this.call_dropbox_data()
-        },
-        call_dropbox_data: function () {
-          ApiService.drive_data_dropbox(this.params)
+        dropbox_data: function () {
+          ApiService.drive_data('dropbox')
             .then(response => {
               this.data = response;
               console.log(this.data);
@@ -36,7 +47,7 @@
 
       },
       beforeMount() {
-        this.my_func();
+        this.dropbox_data();
       },
     }
 </script>
