@@ -2,21 +2,9 @@
   <div>
     <Header></Header>
     <h3>Dropbox</h3>
-    <p>get respective user dropbox data.</p>
-    <table>
-      <tr>
-        <th>No.</th>
-        <th>ID</th>
-        <th>File</th>
-        <th>Type</th>
-      </tr>
-      <tr v-for="(d, index) in data">
-        <td>{{ index }}</td>
-        <td>{{ d.file_id }}</td>
-        <td>{{ d.file_name }}</td>
-        <td>{{ d.file_type }}</td>
-      </tr>
-    </table>
+    <p>get respective user Dropbox data.</p>
+    <button v-on:click="sync_data" @click="popToast" class="btn btn-primary" style="float: right; margin: 10px;">Refresh</button>
+    <b-table striped hover :items="data"></b-table>
   </div>
 </template>
 
@@ -29,6 +17,7 @@
       data(){
         return{
           data: null,
+          refreshed_data: null,
         }
       },
       methods: {
@@ -44,6 +33,43 @@
               }
             )
         },
+        sync_data: function () {
+          ApiService.syncronization('dropbox')
+            .then(response => {
+              this.refreshed_data = response;
+              console.log(this.refreshed_data);
+            })
+            .catch(
+              error => {
+                console.log(error)
+              }
+            )
+        },
+        popToast() {
+          // Use a shorter name for this.$createElement
+          const h = this.$createElement;
+          // Increment the toast count
+          this.count++;
+          // Create the message
+          const vNodesMsg = h(
+            'p',
+            { class: ['text-center', 'mb-0'] },
+            [
+              h('b-spinner', { props: { type: 'grow', small: true } }),
+              ' Sync ',
+              h('strong', {}, 'has'),
+              ` been started. Refresh after a while. `,
+              h('b-spinner', { props: { type: 'grow', small: true } })
+            ]
+          );
+
+          // Pass the VNodes as an array for message and title
+          this.$bvToast.toast([vNodesMsg], {
+
+            solid: true,
+            variant: 'info'
+          })
+        }
 
       },
       beforeMount() {

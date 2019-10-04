@@ -43,6 +43,18 @@ export default {
         return response.data
       })
   },
+  syncronization(params){
+    return http.get('/syncronization/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
+  disconnect_api(params){
+    return http.get('/disconnect/'+params+'/')
+      .then(response => {
+        return response.data
+      })
+  },
   connect_google_drive(){
     return http.get('/connect_google_drive/')
       .then(response => {

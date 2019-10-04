@@ -31,7 +31,7 @@
         </form>
       </div>
       <div class="col-md-6 login-form-2">
-        <h3>Edtechworx</h3>
+        <h3>Connect to Social Drives</h3>
       </div>
     </div>
   </div>

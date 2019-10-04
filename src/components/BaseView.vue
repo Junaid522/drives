@@ -3,12 +3,13 @@
   <Header></Header>
   <h3>All Drives</h3>
   <p>Connected Drives</p>
-  <table>
+  <table class="table">
     <tr>
       <th>No.</th>
       <th>Drive</th>
       <th>Status</th>
-      <th>Connect/Disconnect</th>
+      <th>Connect</th>
+      <th>Disconnect</th>
     </tr>
     <tr>
       <td>1</td>
@@ -17,6 +18,7 @@
       <td><router-link v-if="google_drive_status === true" :to="{ path: 'google_drive' }">G-Drive Files</router-link>
         <a v-else="google_drive_status === false" v-on:click="google_drive_data" target="_blank">Connect to Google</a>
       </td>
+      <td><button v-on:click="disconnect_account('googledrive')" @click="makeToast(false,'Google')" class="btn btn-danger">Disconnect</button></td>
     </tr>
     <tr>
       <td>2</td>
@@ -24,6 +26,7 @@
       <td>Not Defined</td>
       <td><router-link v-if="dropbox_status === true" :to="{ path: 'dropbox' }">Dropbox Files</router-link>
         <a v-else="dropbox_status === false" v-bind:href="dropbox_uri" target="_blank">Connect to Dropbox</a></td>
+      <td><button v-on:click="disconnect_account('dropbox')" @click="makeToast(false,'Dropbox')" class="btn btn-danger">Disconnect</button></td>
     </tr>
     <tr>
       <td>3</td>
@@ -31,7 +34,7 @@
       <td>Not Defined</td>
       <td><router-link v-if="box_status === true" :to="{ path: 'box' }">Box Files</router-link>
         <a v-else="box_status === false" v-bind:href="box_uri" target="_blank">Connect to Box</a></td>
-<!--        <td><a v-bind:href="box_uri" target="_blank">Connect to Box</a></td>-->
+      <td><button v-on:click="disconnect_account('box')" @click="makeToast(false,'Box')" class="btn btn-danger">Disconnect</button></td>
     </tr>
     <tr>
       <td>4</td>
@@ -39,6 +42,7 @@
       <td>Not Defined</td>
       <td><router-link v-if="onedrive_status === true" :to="{ path: 'onedrive' }">Onedrive Files</router-link>
         <a v-else="onedrive_status === false" v-bind:href="onedrive_uri" target="_blank">Connect to Onedrive</a></td>
+      <td><button v-on:click="disconnect_account('onedrive')" @click="makeToast(false,'Onedrive')" class="btn btn-danger">Disconnect</button></td>
     </tr>
   </table>
   <router-view></router-view>
@@ -70,9 +74,20 @@
         box_code: null,
         box_data: null,
         box_drive_data: null,
+        disconnect_data: null,
+        toastCount: null,
+        $bvToast: null,
       }
     },
     methods:{
+      makeToast(append = false, drive) {
+        this.toastCount++;
+        this.$bvToast.toast(`You are successfully disconnected from `+drive, {
+          title: 'BootstrapVue Toast',
+          autoHideDelay: 5000,
+          appendToast: append
+        })
+      },
       google_drive_data: function () {
         if (this.google_drive_status === false){
         ApiService.connect_google_drive()
@@ -123,7 +138,7 @@
             }
           )
       },
-      onedrive_data: function () {
+      onedrive_auth_uri: function () {
         ApiService.connect_onedrive()
           .then(response => {
             this.onedrive_uri = response;
@@ -207,15 +222,48 @@
               console.log(error)
             }
           )
+      },
+      onedrive_data: function () {
+        this.params = this.$route.query.access_token;
+        this.params = '?access_token=' + this.params;
+        if(this.$route.query.access_token) {
+          this.onedrive_token();
+        }
+      },
+      onedrive_token: function () {
+        ApiService.save_token_onedrive(this.params)
+          .then(response => {
+            this.data = response;
+            console.log(this.data);
+          })
+          .catch(
+            error => {
+              console.log(error)
+            }
+          )
+      },
+      disconnect_account:function (params) {
+        ApiService.disconnect_api(params)
+          .then(response => {
+            this.disconnect_data = response;
+            console.log(this.disconnect_data);
+          })
+          .catch(
+            error => {
+              console.log(error)
+            }
+          )
       }
     },
     beforeMount() {
-      this.onedrive_data();
+      this.onedrive_auth_uri();
       this.dropbox_auth_uri();
       this.box_auth_uri();
       this.user_data();
       this.my_func();
       this.box_func();
+      this.onedrive_data();
+
     }
   }
 </script>
